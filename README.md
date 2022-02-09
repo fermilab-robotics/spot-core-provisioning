@@ -37,3 +37,21 @@ Make sure the system has the latest updates including distribution updates.
 ## Prevent disapproved access
 
 Disable VNC access to the CORE.
+
+## Enable Kerberos access
+
+__Note:__ We should consider how to sync time. CORE uses Spot as an NTP server to keep systems in sync, but Kerberos requires the time to be close to the KDC time. We could possibly use CORE to rebroadcast Fermi NTP broadcast, it depends on if Spot will listen to CORE's NTP broadcasts.
+
+This installed the Kerberos user libraries and downloads the Fermi `krb5.conf` file to `/etc/krb5.conf`.
+
+It also ensures the timezone is set to America/Chicago.
+
+### Install keytab
+
+Installing the keytab should be done manually since it requires root to use an auto-generated one-time use password.
+
+*AS ROOT*:
+
+```bash
+kadmin -q "ktadd host/spot.dhcp.fnal.gov" -p host/spot.dhcp.fnal.gov
+```

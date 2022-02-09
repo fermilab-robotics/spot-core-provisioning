@@ -13,3 +13,15 @@
     - import_tasks: tasks/prevent_access.yml
       become: true
       become_method: sudo
+
+    - import_tasks: tasks/enable_access.yml
+      become: true
+      become_method: sudo
+
+    - import_tasks: tasks/install_wifi.yml
+      become: true
+      become_method: sudo
+
+    - import_tasks: tasks/network_config.yml
+      become: true
+      become_method: sudo

@@ -1,0 +1,54 @@
+---
+- name: Install Kerberos user libraries and tools
+  apt:
+    name: krb5-user
+    state: latest
+    update_cache: true
+
+- name: Download krb5.conf
+  get_url:
+    url: https://authentication.fnal.gov/krb5conf/SL7/krb5.conf
+    dest: /etc/krb5.conf
+
+- name: Set timezone to America/Chicago
+  community.general.timezone:
+    name: America/Chicago
+
+# We should consider how to sync time. CORE uses Spot as an NTP server to
+# keep systems in sync, but Kerberos requires the time to be close to
+# the KDC time.
+
+# https://fermi.servicenowservices.com/kb_view.do?sysparm_article=KB0011293
+- name: Ensure ssh features are disabled
+  lineinfile:
+    path: "/etc/ssh/sshd_config"
+    state: present
+    regex: "^(#)?{{ item }}"
+    line: "{{ item }} no"
+  loop:
+    - 'RSAAuthentication'
+    - 'PubkeyAuthentication'
+    - 'PasswordAuthentication'
+    - 'ChallengeResponseAuthentication'
+    - 'KerberosOrLocalPasswd'
+
+- name: Ensure ssh features are enabled
+  lineinfile:
+    path: "/etc/ssh/sshd_config"
+    state: present
+    regex: "^(#)?{{ item }}"
+    line: "{{ item }} yes"
+  loop:
+    - 'UsePAM'
+    - 'KerberosAuthentication'
+    - 'KerberosTicketCleanup'
+    - 'GSSAPIAuthentication'
+    - 'GSSAPIKeyExchange'
+    - 'GSSAPICleanupCredentials'
+    - 'X11Forwarding'
+
+- name: Reload sshd
+  ansible.builtin.systemd:
+    name: ssh
+    enabled: yes
+    state: reloaded
