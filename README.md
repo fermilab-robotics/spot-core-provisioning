@@ -1,21 +1,19 @@
-# ACSys Proxy
+# Spot CORE
 
-## TLS Certification generation
+## Prep
 
-The command below will generate a private key and CSR.
+### Ethernet connection
 
-```bash
-ansible-playbook -i hosts.yml gen.yml
-```
+Use outer-most Ethernet port meant for lidar for the local connection. I used the MacOS feature of sharing my internet connection with another NIC. On the CORE, the lidar port will need to be switched to DHCP to allow the host computer to assign an IP.
 
-The output will print the CSR to paste to the service desk.
+### ssh access
 
-## Certificate installation
+Start by copying a public key to the `spot` user `.ssh/authorized_keys` using `cat .ssh/id_rsa.pub | ssh spot@192.168.2.2 'sudo cat >> ~spot/.ssh/authorized_keys'`. Using password authentication with Ansible requires a third-party package that is not trivially installed.
 
-The command below will unzip and copy the Fermi provided certificate zip.
-
-_Note:_ Move the provided zip, star_fnal_gov*.zip, to the files folder.
+## System update
 
 ```bash
-ansible-playbook -i host.yml install.yml
+ansible-playbook -i hosts.yml main.yml
 ```
+
+The IP is likely to be the same, but it's good verify that the IP in `hosts.yml` is what is assigned to the CORE.

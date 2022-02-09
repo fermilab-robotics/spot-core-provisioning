@@ -1,0 +1,11 @@
+---
+- hosts: spot_core
+  remote_user: spot
+
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - import_tasks: tasks/update.yml
+      become: true
+      become_method: sudo
