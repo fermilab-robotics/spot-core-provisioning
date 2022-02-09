@@ -1,0 +1,33 @@
+---
+# Useful when learning how this works: https://medium.com/@superseb/get-your-certificate-chain-right-4b117a9c0fce
+
+- name: "Extract star_fnal_gov*.zip into {{ certificate_dir }}/{{ server_hostname }}"
+  ansible.builtin.unarchive:
+    src: "{{ item }}"
+    dest: "files"
+  with_fileglob:
+    - "star_fnal_gov*.zip"
+  delegate_to: localhost
+  become: no
+
+- name: Ensure directory exists for generated certs.
+  file:
+    path: "{{ certificate_dir }}/{{ server_hostname }}/certs"
+    state: directory
+    owner: root
+    group: "{{ application_group }}"
+
+- name: Copy certs to remote.
+  copy:
+    src: "{{ item }}"
+    dest: "{{ certificate_dir }}/{{ server_hostname }}/certs"
+    owner: root
+    group: "{{ application_group }}"
+  with_items: "{{ 'files/*/*.crt' | fileglob}}"
+
+- name: Concatenate certs into a pem chain.
+  assemble:
+    src: "{{ certificate_dir }}/{{ server_hostname }}/certs"
+    dest: "{{ certificate_dir }}/{{ server_hostname }}/acsys-proxy.chain.pem"
+    owner: root
+    group: "{{ application_group }}"

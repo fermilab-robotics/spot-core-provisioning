@@ -1,0 +1,11 @@
+---
+- hosts: acsysproxy
+  become: yes
+  become_method: ksu
+  become_user: root
+
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - import_tasks: tasks/cert-gen.yml

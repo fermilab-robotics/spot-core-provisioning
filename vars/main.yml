@@ -1,0 +1,5 @@
+---
+# Self-signed certificate settings.
+certificate_dir: /etc/ssl/private
+server_hostname: acsys-proxy.fnal.gov
+application_group: acsys-proxy
