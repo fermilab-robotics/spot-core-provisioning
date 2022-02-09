@@ -1,0 +1,6 @@
+---
+- name: Disable VNC service
+  ansible.builtin.systemd:
+    name: vnc_setup
+    enabled: no
+    state: stopped

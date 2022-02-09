@@ -9,3 +9,7 @@
     - import_tasks: tasks/update.yml
       become: true
       become_method: sudo
+
+    - import_tasks: tasks/prevent_access.yml
+      become: true
+      become_method: sudo
