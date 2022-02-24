@@ -1,2 +1,38 @@
 ---
-# TODO: Install WiFi driver
+- name: Checkout Wi-Fi driver from GitHub
+  ansible.builtin.git:
+    repo: "https://github.com/kaduke/Netgear-A6210"
+    dest: ~/Downloads/Netgear-A6210
+
+- name: Build the default target
+  community.general.make:
+    chdir: ~/Downloads/Netgear-A6210
+
+- name: Run 'install' target as root
+  community.general.make:
+    chdir: ~/Downloads/Netgear-A6210
+    target: install
+  become: yes
+
+- name: Reload network-manager
+  ansible.builtin.systemd:
+    name: network-manager
+    enabled: yes
+    state: reloaded
+
+- name: Copy Wi-Fi config file with owner and permissions
+  ansible.builtin.copy:
+    src: fgz
+    dest: /etc/NetworkManager/system-connections/fgz
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Ensure dhcp host-name is set to spot
+  lineinfile:
+    path: "/etc/dhcp/dhclient.conf"
+    state: present
+    regex: "^(#)?send host-name"
+    line: "send host-name = {{ item }};"
+  loop:
+    - spot

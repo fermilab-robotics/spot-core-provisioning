@@ -1,0 +1,16 @@
+[connection]
+id=fgz
+uuid=1f5f0396-bff8-4fe5-a0fb-4e39c679d7b4
+type=wifi
+
+[wifi]
+mac-address=00:00:00:00:00:00
+mode=infrastructure
+ssid=fgz
+
+[ipv4]
+method=auto
+
+[ipv6]
+addr-gen-mode=stable-privacy
+method=auto

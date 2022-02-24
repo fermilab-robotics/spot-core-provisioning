@@ -1,7 +1,7 @@
 ---
-- name: Update hostname to spot
-  hostname:
-    name: "spot"
+- name: Set the hostname to spot.dhcp.fnal.gov for Kerberos
+  ansible.builtin.hostname:
+    name: spot.dhcp.fnal.gov
 
 - name: Add self to /etc/hosts
   lineinfile:

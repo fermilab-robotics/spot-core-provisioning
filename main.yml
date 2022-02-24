@@ -25,3 +25,9 @@
     - import_tasks: tasks/network_config.yml
       become: true
       become_method: sudo
+
+    - name: Reboot the machine (This doesn't work correctly)
+      reboot:
+        reboot_timeout: 60
+      become: true
+      become_method: sudo
