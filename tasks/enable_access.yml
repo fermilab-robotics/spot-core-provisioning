@@ -47,6 +47,14 @@
     - 'GSSAPICleanupCredentials'
     - 'X11Forwarding'
 
+- name: Copy .k5login to spot user for common account login
+  ansible.builtin.copy:
+    src: .k5login
+    dest: /home/spot/.k5login
+    owner: root
+    group: spot
+    mode: 0640
+
 - name: Reload sshd
   ansible.builtin.systemd:
     name: ssh
